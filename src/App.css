@@ -1,0 +1,394 @@
+.page {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 24px 16px 40px;
+  display: grid;
+  gap: 16px;
+}
+
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ヘッダー */
+
+.eyebrow {
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.page-head h1 {
+  margin-top: 4px;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+/* 結果 */
+
+.hero {
+  background: var(--hero-bg);
+  color: var(--hero-text);
+  border-radius: 20px;
+  padding: 22px 20px 20px;
+}
+
+.hero-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.hero-label {
+  color: var(--hero-muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.copy-btn {
+  flex-shrink: 0;
+  border: 1px solid var(--hero-line);
+  background: transparent;
+  color: var(--hero-text);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.copy-btn:hover:not(:disabled) {
+  background: var(--hero-card);
+}
+
+.copy-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.hero-value {
+  margin-top: 10px;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hero-value .num {
+  font-size: clamp(40px, 13vw, 56px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.hero-value .unit {
+  color: var(--hero-muted);
+  font-size: 16px;
+}
+
+.hero-pm {
+  margin-top: 12px;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--hero-muted);
+}
+
+.hero-pm strong {
+  color: var(--hero-text);
+  font-size: 18px;
+}
+
+.hero-hint {
+  margin-top: 12px;
+  color: var(--hero-muted);
+  font-size: 13px;
+}
+
+.formula {
+  margin-top: 6px;
+  color: var(--hero-muted);
+  font-size: 12.5px;
+  overflow-wrap: anywhere;
+}
+
+.hero-pm + .formula {
+  margin-top: 12px;
+}
+
+.notice {
+  margin-top: 12px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(240, 138, 60, 0.16);
+  color: #ffc59a;
+  font-size: 13px;
+}
+
+.stats {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.stat {
+  background: var(--hero-card);
+  border-radius: 12px;
+  padding: 12px 10px 12px 12px;
+  min-width: 0;
+}
+
+.stat dt {
+  color: var(--hero-muted);
+  font-size: 12px;
+}
+
+.stat dd {
+  margin-top: 6px;
+  font-size: 17px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.stat .stat-sub {
+  margin-top: 4px;
+  color: var(--hero-muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+/* 公差の帯 */
+
+.bar {
+  margin-top: 22px;
+  font-size: 12px;
+}
+
+.bar-labels,
+.bar-below {
+  position: relative;
+  height: 18px;
+}
+
+.bar-limit,
+.bar-median-label,
+.bar-base-label {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.bar-limit {
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
+.bar-median-label {
+  color: var(--median);
+  font-weight: 700;
+}
+
+.bar-base-label {
+  color: var(--hero-muted);
+}
+
+.bar-track {
+  position: relative;
+  height: 44px;
+  margin: 2px 0 4px;
+}
+
+.bar-axis {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: var(--hero-line);
+}
+
+.bar-band {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  min-width: 2px;
+  background: var(--band-fill);
+  border: 1.5px solid var(--band-border);
+  border-radius: 4px;
+}
+
+.bar-base {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-left: 2px dashed var(--hero-muted);
+  transform: translateX(-1px);
+}
+
+.bar-median {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  width: 3px;
+  background: var(--median);
+  border-radius: 2px;
+  transform: translateX(-50%);
+}
+
+/* 入力 */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 22px 20px;
+  display: grid;
+  gap: 18px;
+}
+
+.card-title {
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.field-label {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.input-box {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0 16px;
+  height: 56px;
+}
+
+.input-box:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.input-box.has-error {
+  border-color: var(--error);
+}
+
+.input-box input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.input-box input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+.input-unit {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.field-error {
+  color: var(--error);
+  font-size: 13px;
+}
+
+.deviation-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px;
+}
+
+.sign-toggle {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.sign-toggle button {
+  width: 48px;
+  border: 0;
+  background: var(--surface);
+  font-size: 22px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.sign-toggle button + button {
+  border-left: 1px solid var(--border);
+}
+
+.sign-toggle button[aria-pressed='true'] {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+.sign-toggle button:focus-visible,
+.chip:focus-visible,
+.copy-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.note {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.examples {
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+
+.examples-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.chips {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  border: 1px solid var(--border);
+  background: var(--chip-bg);
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.chip:hover {
+  border-color: var(--accent);
+}
+
+.page-foot {
+  color: var(--text-muted);
+  font-size: 12px;
+  text-align: center;
+}
