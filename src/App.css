@@ -456,9 +456,9 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 20px;
-  padding: 14px;
+  padding: 12px;
   display: grid;
-  gap: 12px;
+  gap: 10px;
 }
 
 .field {
@@ -467,7 +467,7 @@
 }
 
 .field-label {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
 }
 
@@ -478,8 +478,8 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 0 14px;
-  height: 44px;
+  padding: 0 12px;
+  height: 40px;
 }
 
 .input-box:focus-within {
@@ -498,7 +498,7 @@
   outline: 0;
   background: transparent;
   font-family: var(--font-mono);
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
 }
 
@@ -531,7 +531,7 @@
 
 /* 入力を消すボタン */
 .clear-btn {
-  width: 44px;
+  width: 40px;
   display: grid;
   place-items: center;
   border: 1px solid var(--border);
@@ -571,10 +571,10 @@
 }
 
 .sign-toggle button {
-  width: 44px;
+  width: 40px;
   border: 0;
   background: var(--surface);
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   cursor: pointer;
 }
@@ -596,7 +596,7 @@
 .input-sign {
   margin-right: 6px;
   font-family: var(--font-mono);
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--accent);
 }
@@ -659,7 +659,7 @@
 /* 幅の狭いスマホ（iPhone SE など）でも入力欄の数字が隠れないように詰める */
 @media (max-width: 360px) {
   .card {
-    padding: 12px;
+    padding: 10px;
   }
 
   .deviation-row,
@@ -678,7 +678,7 @@
 
   .input-box input,
   .input-sign {
-    font-size: 18px;
+    font-size: 17px;
   }
 
   .input-sign {

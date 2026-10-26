@@ -38,8 +38,6 @@ export default function App() {
 
   return (
     <main className="page">
-      <ResultPanel calc={calc} />
-
       <section className="card" aria-label="入力" onKeyDown={focusNextOnEnter}>
         <div className="field">
           <label className="field-label" htmlFor="base">
@@ -90,6 +88,8 @@ export default function App() {
           </div>
         )}
       </section>
+
+      <ResultPanel calc={calc} />
     </main>
   )
 }
