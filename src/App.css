@@ -1,9 +1,9 @@
 .page {
   max-width: 520px;
   margin: 0 auto;
-  padding: 24px 16px 40px;
+  padding: 16px 16px 28px;
   display: grid;
-  gap: 16px;
+  gap: 12px;
 }
 
 .num {
@@ -17,7 +17,7 @@
   background: var(--hero-bg);
   color: var(--hero-text);
   border-radius: 20px;
-  padding: 22px 20px 20px;
+  padding: 16px;
 }
 
 .pm {
@@ -132,6 +132,13 @@
   font-size: 18px;
 }
 
+.pm-value {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
 .pm-icon {
   width: 15px;
   height: 15px;
@@ -204,10 +211,10 @@
 /* 上限〜下限の間 */
 
 .range {
-  margin-top: 20px;
+  margin-top: 14px;
   background: var(--hero-card);
   border-radius: 12px;
-  padding: 12px 14px;
+  padding: 10px 12px;
 }
 
 .range-title {
@@ -217,7 +224,7 @@
 }
 
 .range-frame {
-  margin-top: 10px;
+  margin-top: 6px;
   overflow: hidden;
   transition: height 260ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
@@ -233,7 +240,7 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 12px;
-  padding: 3px 0;
+  padding: 2px 0;
   animation: range-in 220ms ease-out both;
 }
 
@@ -322,12 +329,12 @@
 /* ブロックゲージ */
 
 .blocks {
-  margin-top: 20px;
+  margin-top: 14px;
   background: var(--hero-card);
   border-radius: 12px;
-  padding: 12px 14px 14px;
+  padding: 10px 12px 12px;
   display: grid;
-  gap: 12px;
+  gap: 10px;
 }
 
 .blocks-targets {
@@ -449,14 +456,14 @@
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 20px;
-  padding: 18px 16px;
+  padding: 14px;
   display: grid;
-  gap: 14px;
+  gap: 12px;
 }
 
 .field {
   display: grid;
-  gap: 6px;
+  gap: 4px;
 }
 
 .field-label {
@@ -472,7 +479,7 @@
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 0 14px;
-  height: 48px;
+  height: 44px;
 }
 
 .input-box:focus-within {
@@ -646,5 +653,43 @@
 @media (prefers-reduced-motion: reduce) {
   .swap-hint {
     animation: none;
+  }
+}
+
+/* 幅の狭いスマホ（iPhone SE など）でも入力欄の数字が隠れないように詰める */
+@media (max-width: 360px) {
+  .card {
+    padding: 12px;
+  }
+
+  .deviation-row,
+  .input-row {
+    gap: 6px;
+  }
+
+  .sign-toggle button,
+  .clear-btn {
+    width: 38px;
+  }
+
+  .input-box {
+    padding: 0 10px;
+  }
+
+  .input-box input,
+  .input-sign {
+    font-size: 18px;
+  }
+
+  .input-sign {
+    margin-right: 4px;
+  }
+
+  .input-unit {
+    font-size: 12px;
+  }
+
+  .hero-pm strong {
+    font-size: 16px;
   }
 }

@@ -6,9 +6,9 @@ import { calculate, type Deviation } from './lib/tolerance'
 import './App.css'
 
 export default function App() {
-  const [base, setBase] = useState('180')
-  const [upper, setUpper] = useState<Deviation>({ sign: 1, text: '0.25' })
-  const [lower, setLower] = useState<Deviation>({ sign: 1, text: '0.15' })
+  const [base, setBase] = useState('')
+  const [upper, setUpper] = useState<Deviation>({ sign: 1, text: '' })
+  const [lower, setLower] = useState<Deviation>({ sign: 1, text: '' })
   const baseRef = useRef<HTMLInputElement>(null)
 
   const calc = calculate({ base, upper, lower })

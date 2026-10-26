@@ -58,13 +58,16 @@ export function ResultPanel({ calc }: Props) {
                   onClick={() => setFormulaOpen((open) => !open)}
                 >
                   <span>{shown.display.notation?.label}</span>
-                  <strong className="num" aria-live="polite">
-                    {shown.display.notation?.text}
-                  </strong>
-                  <svg className="pm-icon" viewBox="0 0 16 16" aria-hidden="true">
-                    <circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" strokeWidth="1.4" />
-                    <path d="M8 7v4.2M8 4.6v.1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-                  </svg>
+                  {/* 値と ⓘ は折り返しても離さない */}
+                  <span className="pm-value">
+                    <strong className="num" aria-live="polite">
+                      {shown.display.notation?.text}
+                    </strong>
+                    <svg className="pm-icon" viewBox="0 0 16 16" aria-hidden="true">
+                      <circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" strokeWidth="1.4" />
+                      <path d="M8 7v4.2M8 4.6v.1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                    </svg>
+                  </span>
                 </button>
                 <button
                   type="button"
