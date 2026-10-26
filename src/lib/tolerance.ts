@@ -163,6 +163,11 @@ export interface ToleranceDisplay {
   upperLimit: string | null
   lowerLimit: string | null
   plusMinus: string | null
+  /**
+   * 結果の先頭に出す表記。上下が同じ数字の ＋／− なら「中央値 ± 半幅」、
+   * それ以外（＋＋・−−・0 を含むなど）は基準寸法と許容差を大きい順に並べる
+   */
+  notation: { label: string; text: string } | null
   width: string
   widthMicrons: string
   hi: string
@@ -175,17 +180,31 @@ export function describe(r: ToleranceResult): ToleranceDisplay {
   const fmt = (u: number) => formatMm(u, r.digits)
   const term = (u: number) => (u < 0 ? `(${fmt(u)})` : fmt(u))
   const median = r.median === null ? null : fmt(r.median)
+  const plusMinus = median === null ? null : `${median} ± ${fmt(r.halfWidth)}`
+  const hi = formatMm(r.hi, r.digits, true)
+  const lo = formatMm(r.lo, r.digits, true)
+  const symmetric = r.hi > 0 && r.lo === -r.hi
+  // 図面と同じく、0 は符号も桁も付けない
+  const dev = (u: number) => (u === 0 ? '0' : formatMm(u, r.digits, true))
+
+  let notation: ToleranceDisplay['notation'] = null
+  if (r.base !== null && plusMinus !== null) {
+    notation = symmetric
+      ? { label: '± 表記', text: plusMinus }
+      : { label: '公差表記', text: `${r.base.text} ${dev(r.hi)} / ${dev(r.lo)}` }
+  }
 
   return {
     median,
     upperLimit: r.upperLimit === null ? null : fmt(r.upperLimit),
     lowerLimit: r.lowerLimit === null ? null : fmt(r.lowerLimit),
-    plusMinus: median === null ? null : `${median} ± ${fmt(r.halfWidth)}`,
+    plusMinus,
+    notation,
     width: fmt(r.width),
     // 単位 2 つで 1μm。hi・lo とも偶数なので幅も必ず割り切れる
     widthMicrons: `${r.width / 2} μm`,
-    hi: formatMm(r.hi, r.digits, true),
-    lo: formatMm(r.lo, r.digits, true),
+    hi,
+    lo,
     halfFormula: `(${term(r.hi)} + ${term(r.lo)}) ÷ 2 = ${fmt(r.offset)}`,
     baseFormula:
       r.base === null
@@ -194,7 +213,64 @@ export function describe(r: ToleranceResult): ToleranceDisplay {
   }
 }
 
-/** CAD などに貼るとき用に、マイナスを ASCII に戻す。 */
-export function toPlainText(text: string): string {
-  return text.split(MINUS).join('-')
+/** 上限と下限の間に並べる行数の目安。これを超えるときは刻みを粗くする */
+const MAX_RANGE_STEPS = 20
+/** 刻みの候補（0.001mm 単位） */
+const STEP_THOUSANDTHS = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000]
+
+type RangeKind = 'upper' | 'lower' | 'median' | 'step' | 'base'
+/** 同じ値に複数の意味が重なったとき、どれを見せるかの優先順 */
+const KIND_PRIORITY: RangeKind[] = ['upper', 'lower', 'median', 'step', 'base']
+
+export interface RangeRow {
+  text: string
+  kind: RangeKind
+  /** 基準寸法と同じ値の行（上限・中央値などと重なったとき） */
+  atBase: boolean
+  /** この行の前に区切り（⋮）を入れる。基準が範囲の外にあって、間を省くとき */
+  gapBefore: boolean
+}
+
+/**
+ * 上限から下限までを細かい刻みで並べる（大きい値が先頭）。
+ * 刻みは表示桁の 1 桁ぶん（0.01 など）から始め、行が多すぎるときだけ 0.02、0.05… と粗くする。
+ * 中央値や基準寸法が刻みに乗らないときは、その位置に差し込む。
+ * 基準寸法が範囲の外（＋＋や−−）なら、範囲の上か下に区切って出す。
+ */
+export function rangeRows(r: ToleranceResult): RangeRow[] {
+  if (r.base === null || r.upperLimit === null || r.lowerLimit === null || r.median === null || r.width === 0) {
+    return []
+  }
+
+  const minStep = 2 * 10 ** (MAX_DECIMALS - r.digits)
+  const candidates = STEP_THOUSANDTHS.map((t) => t * 2).filter((s) => s >= minStep)
+  const step = candidates.find((s) => r.width / s <= MAX_RANGE_STEPS) ?? candidates[candidates.length - 1]
+
+  const marks = new Map<number, Set<RangeKind>>()
+  const mark = (units: number, kind: RangeKind) => {
+    const kinds = marks.get(units) ?? new Set<RangeKind>()
+    kinds.add(kind)
+    marks.set(units, kinds)
+  }
+  mark(r.upperLimit, 'upper')
+  mark(r.lowerLimit, 'lower')
+  mark(r.median, 'median')
+  mark(r.base.units, 'base')
+  // 上限より小さい最初の刻みから下へ
+  for (let v = Math.ceil(r.upperLimit / step) * step - step; v > r.lowerLimit; v -= step) mark(v, 'step')
+
+  const rows: RangeRow[] = [...marks.entries()]
+    .sort((a, b) => b[0] - a[0])
+    .map(([units, kinds]) => {
+      const kind = KIND_PRIORITY.find((k) => kinds.has(k)) ?? 'step'
+      return {
+        text: formatMm(units, r.digits),
+        kind,
+        atBase: kind !== 'base' && kinds.has('base'),
+        gapBefore: false,
+      }
+    })
+  if (r.base.units > r.upperLimit) rows[1].gapBefore = true
+  if (r.base.units < r.lowerLimit) rows[rows.length - 1].gapBefore = true
+  return rows
 }

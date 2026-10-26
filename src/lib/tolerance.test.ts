@@ -1,5 +1,5 @@
 import { describe as group, expect, it } from 'vitest'
-import { calculate, describe, splitLeadingSign, type Deviation, type Sign } from './tolerance'
+import { calculate, describe, rangeRows, splitLeadingSign, type Deviation, type Sign } from './tolerance'
 
 function dev(value: string): Deviation {
   if (value === '') return { sign: 1, text: '' }
@@ -55,6 +55,76 @@ group('表示', () => {
   it('計算式の基準寸法は入力どおりの桁で出す', () => {
     expect(run('180', '+0.25', '+0.15').baseFormula).toBe('→ 180 + 0.20 = 180.20')
     expect(run('187.5', '+0.1', '').baseFormula).toBe('→ 187.5 + 0.05 = 187.55')
+  })
+})
+
+group('先頭の表記', () => {
+  it('上下が同じ数字の ＋／− なら ± 表記', () => {
+    expect(run('4.6', '+0.15', '-0.15').notation).toEqual({ label: '± 表記', text: '4.60 ± 0.15' })
+  })
+
+  it('＋＋・−−・0 を含むときは許容差を大きい順に並べる', () => {
+    expect(run('180', '+0.25', '+0.15').notation).toEqual({ label: '公差表記', text: '180 +0.25 / +0.15' })
+    expect(run('180', '-0.25', '-0.15').notation).toEqual({ label: '公差表記', text: '180 −0.15 / −0.25' })
+    expect(run('25', '+0.03', '-0.01').notation).toEqual({ label: '公差表記', text: '25 +0.03 / −0.01' })
+    expect(run('10', '+0.05', '').notation).toEqual({ label: '公差表記', text: '10 +0.05 / 0' })
+  })
+
+  it('基準寸法が空なら出さない', () => {
+    expect(run('', '+0.1', '').notation).toBeNull()
+  })
+})
+
+group('上限と下限の間', () => {
+  // 'step' 以外は「値:種類」、基準と重なる行は「(基準)」、区切りの後は先頭に「⋮ 」
+  function rows(base: string, upper: string, lower: string) {
+    const calc = calculate({ base, upper: dev(upper), lower: dev(lower) })
+    if (!calc.ok) throw new Error(JSON.stringify(calc.errors))
+    return rangeRows(calc.result).map(
+      (r) =>
+        (r.gapBefore ? '⋮ ' : '') +
+        r.text +
+        (r.kind === 'step' ? '' : `:${r.kind}`) +
+        (r.atBase ? '(基準)' : ''),
+    )
+  }
+
+  it('＋＋は 0.01 刻みで並び、基準を下に区切って出す', () => {
+    expect(rows('180', '+0.25', '+0.15')).toEqual([
+      '180.25:upper', '180.24', '180.23', '180.22', '180.21', '180.20:median',
+      '180.19', '180.18', '180.17', '180.16', '180.15:lower', '⋮ 180.00:base',
+    ])
+  })
+
+  it('−−は基準を上に区切って出す', () => {
+    expect(rows('180', '-0.15', '-0.25')).toEqual([
+      '180.00:base', '⋮ 179.85:upper', '179.84', '179.83', '179.82', '179.81', '179.80:median',
+      '179.79', '179.78', '179.77', '179.76', '179.75:lower',
+    ])
+  })
+
+  it('刻みに乗らない中央値は差し込み、基準と同じ下限には印を付ける', () => {
+    expect(rows('10', '+0.05', '')).toEqual([
+      '10.05:upper', '10.04', '10.03', '10.025:median', '10.02', '10.01', '10.00:lower(基準)',
+    ])
+  })
+
+  it('＋−は基準が範囲の中に入る', () => {
+    expect(rows('25', '+0.03', '-0.01')).toEqual([
+      '25.03:upper', '25.02', '25.01:median', '25.00(基準)', '24.99:lower',
+    ])
+  })
+
+  it('幅が広いときは刻みを粗くする', () => {
+    const r = rows('4.6', '+0.15', '-0.15')
+    expect(r.length).toBeLessThanOrEqual(22)
+    expect(r.slice(0, 3)).toEqual(['4.75:upper', '4.74', '4.72'])
+    expect(r).toContain('4.60:median(基準)')
+  })
+
+  it('基準寸法が空・幅 0 のときは出さない', () => {
+    expect(rows('', '+0.1', '')).toEqual([])
+    expect(rows('10', '', '')).toEqual([])
   })
 })
 

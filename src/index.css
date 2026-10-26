@@ -6,8 +6,8 @@
   --text-muted: #5d6669;
   --accent: #1f6b6f;
   --accent-text: #ffffff;
-  --chip-bg: #f1f3f2;
   --error: #c0392b;
+  --minus: #b4532a;
 
   --hero-bg: #162027;
   --hero-card: #212d33;
@@ -37,8 +37,8 @@
     --text: #e8ecec;
     --text-muted: #9aa6a9;
     --accent: #3a9a9e;
-    --chip-bg: #212b30;
     --error: #ff7b6b;
+    --minus: #c8693a;
 
     --hero-bg: #0a1013;
     --hero-card: #172126;
